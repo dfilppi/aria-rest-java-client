@@ -7,7 +7,7 @@ import java.net.URL;
  */
 public class AriaClientFactory {
 
-    AriaClient createRestClient(URL server_address){
-        return new AriaRestClient(server_address);
+    AriaClient createRestClient(String protocol, String address, int port, String version){
+        return new AriaRestClient(protocol, address, port, version);
     }
 }

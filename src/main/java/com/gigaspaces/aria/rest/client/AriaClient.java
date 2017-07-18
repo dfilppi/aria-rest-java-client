@@ -4,6 +4,7 @@ import com.gigaspaces.aria.rest.client.exceptions.StorageException;
 import com.gigaspaces.aria.rest.client.exceptions.ValidationException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by DeWayne on 7/12/2017.
@@ -17,14 +18,21 @@ public interface AriaClient {
      * @throws ValidationException
      * @throws StorageException
      */
-    public void install_service_template( ServiceTemplate template)throws ValidationException, StorageException;
+    public void install_service_template(ServiceTemplate template)throws ValidationException, StorageException, Exception;
 
     /**
      * Validate a service template
      * @param template
      * @return
      */
-    public ValidationResult validate_service_template( ServiceTemplate template)throws ValidationException;
+    public ValidationResult validate_service_template(ServiceTemplate template)throws Exception;
+
+    /**
+     * Fetch a list of stored service templates
+     *
+     * @return
+     */
+    public List<? extends ServiceTemplate> list_service_templates();
 
     /**
      * Delete an existing template
@@ -32,31 +40,30 @@ public interface AriaClient {
      * @param template_id
      * @throws IllegalArgumentException
      */
-    public void delete_service_template(int template_id) throws IllegalArgumentException;
+    public void delete_service_template(int template_id) throws IllegalArgumentException, Exception;
 
     /**
      * Returns a list of node templates for a given service template
      * @param template_id
      * @return
      */
-    List<NodeTemplate> get_nodes(int template_id);
+    List<? extends NodeTemplate> list_nodes(int template_id);
 
     /**
      * Fetch a given node template
      *
-     * @param template_id
      * @param node_id
      * @return
      * @throws IllegalArgumentException
      */
-    public NodeTemplate get_node(int template_id, int node_id) throws IllegalArgumentException;
+    public NodeTemplate get_node( int node_id) throws IllegalArgumentException;
 
     /**
      * List all services
      *
      * @return
      */
-    public List<Service> get_services();
+    public List<? extends Service> list_services();
 
     /**
      * Fetch the specified service
@@ -74,7 +81,7 @@ public interface AriaClient {
      * @return
      * @throws IllegalArgumentException
      */
-    public List<Output> get_service_outputs(int service_id) throws IllegalArgumentException;
+    public List<? extends Output> list_service_outputs(int service_id) throws IllegalArgumentException;
 
     /**
      * Fetch the inputs of the specified service
@@ -83,18 +90,17 @@ public interface AriaClient {
      * @return
      * @throws IllegalArgumentException
      */
-    public List<Input> get_service_inputs(int service_id) throws IllegalArgumentException;
+    public List<? extends Input> list_service_inputs(int service_id) throws IllegalArgumentException;
 
     /**
      * Create a service
      *
+     * @param template_id
      * @param service_name
      * @param inputs
-     * @param template_id
-     * @return
      * @throws Exception
      */
-    public Service create_service(String service_name, List<Input> inputs, int template_id)throws Exception;
+    public void create_service(int template_id, String service_name, List<Input> inputs)throws Exception;
 
     /**
      * Delete the specified service
@@ -102,7 +108,7 @@ public interface AriaClient {
      * @param service_id
      * @throws IllegalArgumentException
      */
-    public void delete_service(int service_id)throws IllegalArgumentException;
+    public void delete_service(int service_id)throws Exception;
 
     /**
      * List workflows for the provided service
@@ -111,7 +117,7 @@ public interface AriaClient {
      * @return
      * @throws IllegalArgumentException
      */
-    public List<Workflow> list_workflows(int service_id)throws IllegalArgumentException;
+    public List<? extends Workflow> list_workflows(int service_id)throws IllegalArgumentException;
 
     /**
      * Fetch the specified workflow
@@ -128,7 +134,7 @@ public interface AriaClient {
      * @return
      * @throws Exception
      */
-    public List<Execution> list_executions()throws Exception;
+    public List<? extends Execution> list_executions()throws Exception;
 
     /**
      * List executions for provided service
@@ -137,7 +143,7 @@ public interface AriaClient {
      * @return
      * @throws Exception
      */
-    public List<Execution> list_executions(int service_id)throws Exception;
+    public List<? extends Execution> list_executions(int service_id)throws Exception;
 
     /**
      * Fetch the specified execution
@@ -154,10 +160,10 @@ public interface AriaClient {
      * @param service_id
      * @param workflow_name
      * @param details
-     * @return
-     * @throws IllegalArgumentException
+     * @return the execution id
+     * @throws Exception
      */
-    public Execution start_execution(int service_id, String workflow_name, ExecutionDetails details)throws IllegalArgumentException;
+    public int start_execution(int service_id, String workflow_name, ExecutionDetails details)throws Exception;
 
     /**
      * Resumes an interrupted execution
@@ -174,5 +180,5 @@ public interface AriaClient {
      * @param execution_id
      * @throws IllegalArgumentException
      */
-    public void cancel_execution(int execution_id)throws IllegalArgumentException;
+    public void cancel_execution(int execution_id)throws Exception;
 }
